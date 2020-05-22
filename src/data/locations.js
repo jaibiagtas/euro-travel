@@ -18,7 +18,18 @@ export const locations = [
             lng: 3.8767
         },
         todo: [
-            'First trip!'
+            'Start of Summer Holidays'
+        ]
+    },
+    {
+        placename: 'Saint-Flour, France' ,
+        date: 'August, 2015' ,
+        location: {
+            lat: 45.0330,
+            lng: 3.0949
+        },
+        todo: [
+            'Summer Holidays'
         ]
     }
 ];

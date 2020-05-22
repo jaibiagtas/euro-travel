@@ -1,3 +1,4 @@
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import L from 'leaflet';
 
@@ -10,14 +11,14 @@ import { locations } from 'data/locations';
 
 const LOCATION = {
   lat: 38.9072,
-  lng: -77.0369,
+  lng: -77.0369
 };
 
 const CENTER = [LOCATION.lat, LOCATION.lng];
 const DEFAULT_ZOOM = 2;
 
 const IndexPage = () => {
-  const markerRef = useRef();
+
 
   /**
    * mapEffect
@@ -26,36 +27,53 @@ const IndexPage = () => {
    */
 
   async function mapEffect({ leafletElement } = {}) {
+    if ( !leafletElement ) return;
 
+    leafletElement.eachLayer((layer) => leafletElement.removeLayer(layer));
+
+    const tripPoints = createTripPointsGeoJson({ locations });
+    const tripLines = createTripLinesGeoJson({ locations });
+
+    const tripPointsGeoJsonLayers = new L.geoJson(tripPoints, {
+      pointToLayer: tripStopPointToLayer
+    });
+
+    const tripLinesGeoJsonLayers = new L.geoJson(tripLines);
+
+    tripPointsGeoJsonLayers.addTo(leafletElement);
+    tripLinesGeoJsonLayers.addTo(leafletElement);
+
+    const bounds = tripPointsGeoJsonLayers.getBounds();
+
+    leafletElement.fitBounds(bounds);
   }
 
   const mapSettings = {
     center: CENTER,
     defaultBaseMap: 'OpenStreetMap',
     zoom: DEFAULT_ZOOM,
-    mapEffect,
+    mapEffect
   };
-
   return (
     <Layout pageName="home">
       <Helmet>
         <title>Home Page</title>
       </Helmet>
 
+      <Map {...mapSettings} />
+     
       <Container type="content" className="text-center home-start">
         <h2>Still Getting Started?</h2>
         <p>Run the following in your terminal!</p>
         <pre>
           <code>gatsby new [directory] https://github.com/colbyfayock/gatsby-starter-leaflet</code>
         </pre>
-        <p className="note">Note: Gatsby CLI required globally for the above command</p>
       </Container>
     </Layout>
   );
 };
 
 export default IndexPage;
-
 
 /**
  * tripStopPointToLayer

@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet';
 import L from 'leaflet';
 import { Marker } from 'react-leaflet';
 
-import { promiseToFlyTo, getCurrentLocation } from 'lib/map';
 
 import Layout from 'components/Layout';
 import Container from 'components/Container';
